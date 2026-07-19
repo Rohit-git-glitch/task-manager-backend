@@ -4,6 +4,8 @@ const app = express();
 
 const userRoutes = require("./routes/userRoutes");
 
+const taskRoutes = require("/routes/taskRoutes");
+
 app.use(express.json());
 //todo Very very imp express.json() is a middleware
 /* 
@@ -23,5 +25,7 @@ app.use("/api/users",userRoutes);
 app.get("/", (req, res) => {
     res.send("Hello, Task Manager Backend!");
 });
+
+app.use("/api/tasks",taskRoutes);
 
 module.exports = app;
