@@ -4,7 +4,7 @@ const app = express();
 
 const userRoutes = require("./routes/userRoutes");
 
-const taskRoutes = require("/routes/taskRoutes");
+const taskRoutes = require("./routes/taskRoutes");
 
 app.use(express.json());
 //todo Very very imp express.json() is a middleware
