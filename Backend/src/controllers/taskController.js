@@ -28,8 +28,9 @@ const createTask = async (req,res) =>{
 const getTasks = async(req,res) =>{
     try{
 
+        
         const tasks = await Task.find({
-            user : req.user_id,
+            user : req.user._id,
         })
 
         res.status(200).json(tasks);
@@ -43,7 +44,55 @@ const getTasks = async(req,res) =>{
     } 
 };
 
+const updateTask = async(req,res) => {
+    try{
+        const{id} = req.params;
+
+        const task = await Task.findById(id);
+
+        if(!task){
+            return res.status(404).json({
+                message : "Task not found",
+            });
+        }
+
+        if(task.user.toString() != req.user._id.toString()){
+            return res.status(403).json({
+                message : "Access Denied",
+            });
+        }
+
+        const {titele, description , completed} = req.body;
+
+        if(title !== undefined){
+            task.title = title;
+        }
+
+         if (description !== undefined) {
+            task.description = description;
+        }
+
+        if (completed !== undefined) {
+            task.completed = completed;
+        }
+        await task.save();
+
+        res.status(200).json({
+            message : "Task updated successfully",
+            task,
+        })
+    }catch(error){
+        console.log(error);
+
+        res.status(500).json({
+            message : "Server Error",
+        });
+    }
+}
+
+
 module.exports = {
     createTask,
     getTasks,
+    updateTask,
 }
