@@ -1,6 +1,6 @@
 const Task = require("../models/Task");
 
-const createTask = async (req,res) =>{
+const createTask = async (req,res,next) =>{
     try{
         const {title,description} = req.body;
 
@@ -17,15 +17,11 @@ const createTask = async (req,res) =>{
 
 
     }catch(error){
-       console.log(error);
-
-       res.status(500).json({
-            message : "Server Error"
-       });
+      next(error);
     }
-}
+};
 
-const getTasks = async(req,res) =>{
+const getTasks = async(req,res,next) =>{
     try{
 
         
@@ -36,15 +32,11 @@ const getTasks = async(req,res) =>{
         res.status(200).json(tasks);
     }
     catch(error){
-        console.log(error);
-
-        res.status(500).json({
-            message : "Server Error",
-        });
+        next(error);
     } 
 };
 
-const updateTask = async(req,res) => {
+const updateTask = async(req,res,next) => {
     try{
         const{id} = req.params;
 
@@ -82,15 +74,11 @@ const updateTask = async(req,res) => {
             task,
         })
     }catch(error){
-        console.log(error);
-
-        res.status(500).json({
-            message : "Server Error",
-        });
+       next(error);
     }
-}
+};
 
-const deleteTask = async(req,res) => {
+const deleteTask = async(req,res,next) => {
     try{
         const{id} = req.params;
 
@@ -115,15 +103,9 @@ const deleteTask = async(req,res) => {
 
 
     }catch(error){
-        res.status(500).json({
-             message : "Server Error",
-        })
+        next(error);
     }
-}
-
-
-
-
+};
 module.exports = {
     createTask,
     getTasks,

@@ -23,6 +23,19 @@ const registerUserValidator = [
         .withMessage("Name must be at least 2 characters")
 ];
 
+const loginUserValidator = [
+    body("email")
+        .notEmpty()
+        .withMessage("Email is required")
+        .bail()
+        .isEmail()
+        .withMessage("Invalid Email Format"),
+
+    body("password")
+        .notEmpty()
+        .withMessage("Password is required")
+];
 module.exports = {
     registerUserValidator,
+    loginUserValidator,
 }

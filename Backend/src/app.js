@@ -18,7 +18,7 @@ app.use(express.json());
 */
 
 app.use("/api/users",userRoutes);
-
+app.use("/api/tasks",taskRoutes);
 
 //app.use(express.json());
 
@@ -26,6 +26,7 @@ app.get("/", (req, res) => {
     res.send("Hello, Task Manager Backend!");
 });
 
-app.use("/api/tasks",taskRoutes);
+const errorHandler = require("./middleware/errorHandler");
+app.use(errorHandler);
 
 module.exports = app;

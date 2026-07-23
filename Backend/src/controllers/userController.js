@@ -3,7 +3,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const registerUser = async(req, res) => {   //! This is actually good it prints the data coming from post postman
+const registerUser = async(req, res,next) => {   //! This is actually good it prints the data coming from post postman
     try{
         
     const {name , email , password } = req.body;
@@ -34,9 +34,7 @@ const registerUser = async(req, res) => {   //! This is actually good it prints 
             }
         });
     } catch(error){
-        res.status(500).json({
-            message: "Server Error"
-        });
+        next(error);
     }
 };
 /*
@@ -45,7 +43,7 @@ const registerUser = async(req, res) => {   //! This is actually good it prints 
 */
 
 
-const loginUser = async(req , res) => {
+const loginUser = async(req , res , next) => {
     try{
         const {email , password } = req.body;
 
@@ -80,29 +78,18 @@ const loginUser = async(req , res) => {
         })
 
     }catch(error){
-        console.log(error);
-
-        res.status(500).json({
-            message: "Server Error"
-        });
-
+      next();
     }
 };
 
 
-const getProfile = (req , res) => {
-
-    console.log(req.user);
-
-    res.status(200).json(
-        req.user
-    );
-
+const getProfile = (req , res, next) => {
+    try{
+         res.status(200).json(req.user);
+    }catch(error){
+        next(error);
+    }
 };
-
-
-
-
 
 
 module.exports = {
