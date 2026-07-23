@@ -2,6 +2,8 @@ const express = require("express");
 
 const router = express.Router();
 
+const {registerUserValidator} = require("../validators/userValidator");
+const validate = require("../middleware/validate");
 
 const { registerUser,
         loginUser ,
@@ -14,7 +16,12 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 
 
-router.post("/register",registerUser);
+router.post(
+    "/register",
+    registerUserValidator,
+    validate,
+    registerUser
+);
 router.post("/login",loginUser);
 
 //this below is temporary

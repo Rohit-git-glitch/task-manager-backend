@@ -14,6 +14,7 @@ const createTaskValidator = [
         .bail()
         .isLength({min:5})
         .withMessage("Description must be at least 5 characters"),
+
 ];
 
 module.exports = {
