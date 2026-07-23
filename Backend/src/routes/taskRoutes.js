@@ -2,7 +2,7 @@ const express = require("express");
 const {createTask , getTasks , updateTask , deleteTask} = require("../controllers/taskController");
 const authMiddleware = require("../middleware/authMiddleware");
 
-const {createTaskValidator} = require("../validator/taskValidator");
+const {createTaskValidator} = require("../validators/taskValidator");
 const validate = require("../middleware/validate");
 
 
