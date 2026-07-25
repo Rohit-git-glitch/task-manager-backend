@@ -40,7 +40,7 @@ Its only job is:
 
 "Is this user authenticated?"
 */
-
+const {errorResponse} = require("../utils/response");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
@@ -52,27 +52,46 @@ const authMiddleware = async (req , res , next ) => {
         //console.log("Inside Auth Middleware");
 
         if(!authHeader){
-                return res.status(401).json({
-                        message : "Authorization header missing"        
-                });
+                // return res.status(401).json({
+                //         message : "Access Denied"        
+                // });
+                return errorResponse(
+                        res,
+                        401,
+                        "Access Denied",
+                        "ACCESS_DENIED"
+                );
         }
 
         //now extracting the token
         const token = authHeader.split(" ")[1];  // hence now if postman send Authorization : Bearer abc123  now with help of split(" ")[1] it will give only abc123
         try{
                 const decoded = jwt.verify(token , process.env.JWT_SECRET);  //todo jwt.verify() checks whether the JWT is valid, has not been tampered with, and has not expired. If valid, it returns the payload (decoded). getting profile is main reason
-        
 
                 const user = await User.findById(decoded.id);
+                if (!user) {
+                        return errorResponse(
+                          res,
+                          401,
+                         "User not found",
+                        "USER_NOT_FOUND"
+                        );
+                        }
 
                 req.user = user;
 
                 next();  //! i.e waiting... if its not here it will enter in halt state
 
         }catch(error){
-                return res.status(401).json({
-                        message : "Invalid Token"
-                });
+                // return res.status(401).json({
+                //         message : "Invalid Token"
+                // });
+                return errorResponse(
+                        res,
+                        401,
+                        "Invalid Token",
+                        "INVALID_TOKEN"
+                );
         }
 
 };
