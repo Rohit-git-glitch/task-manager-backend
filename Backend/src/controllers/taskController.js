@@ -1,5 +1,6 @@
 const { successResponse } = require("../utils/response");
 const { errorResponse } = require("../utils/response");
+const { getPagination } = require("../utils/pagination");
 const Task = require("../models/Task");
 const createTask = async (req,res,next) =>{
     try{
@@ -30,17 +31,33 @@ const createTask = async (req,res,next) =>{
 
 const getTasks = async(req,res,next) =>{
     try{
-
         
-        const tasks = await Task.find({
-            user : req.user._id,
-        })
+        const { page , limit , skip } = getPagination(req.query);
 
-        // res.status(200).json(tasks);
+        const tasks = await Task.find({
+                user : req.user._id,
+            })
+        .skip(skip)
+        .limit(limit);
+
+         const totalTasks = await Task.countDocuments({
+            user: req.user.id
+        });
+
+        const totalPages = Math.ceil(totalTasks / limit );
         return successResponse(
             res,
             200,
-            tasks
+            "Tasks Feteched Successfully",
+             {
+                tasks,
+                pagination : {
+                        currentPage: page,
+                        limit,
+                        totalTasks,
+                        totalPages
+                }
+             }
         );
     }
     catch(error){
