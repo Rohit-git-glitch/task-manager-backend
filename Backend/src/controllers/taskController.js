@@ -38,13 +38,37 @@ const getTasks = async(req,res,next) =>{
             user : req.user._id
         };
 
+
+        let sort = {};
+            if (req.query.sort === "latest") {
+                sort.createdAt = -1;
+            } else if (req.query.sort === "oldest") {
+                sort.createdAt = 1;
+            }
+
+
         if(req.query.completed !== undefined){
-            filter.completed = req.query.completed === "true";
+            // filter.completed = req.query.completed === "true";
+            if (req.query.completed === "true") {
+                    filter.completed = true;
+                } else {
+                    filter.completed = false;
+                }
         }
 
         const tasks = await Task.find(filter)
+        .sort(sort)
         .skip(skip)
         .limit(limit);
+
+        /*  Find matching tasks
+        ↓
+        Sort them
+        ↓
+        Skip previous page
+        ↓
+        Limit current page
+         */
 
          const totalTasks = await Task.countDocuments(filter);
 
