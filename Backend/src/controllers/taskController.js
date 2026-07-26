@@ -34,15 +34,19 @@ const getTasks = async(req,res,next) =>{
         
         const { page , limit , skip } = getPagination(req.query);
 
-        const tasks = await Task.find({
-                user : req.user._id,
-            })
+        const filter = {
+            user : req.user._id
+        };
+
+        if(req.query.completed !== undefined){
+            filter.completed = req.query.completed === "true";
+        }
+
+        const tasks = await Task.find(filter)
         .skip(skip)
         .limit(limit);
 
-         const totalTasks = await Task.countDocuments({
-            user: req.user.id
-        });
+         const totalTasks = await Task.countDocuments(filter);
 
         const totalPages = Math.ceil(totalTasks / limit );
         return successResponse(
