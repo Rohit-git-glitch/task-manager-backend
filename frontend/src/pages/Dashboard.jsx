@@ -1,8 +1,16 @@
+import Navbar from "../components/Navbar";
+
 function Dashboard() {
   return (
-    <h1 className="text-3xl font-bold text-center mt-10">
-      Dashboard Page
-    </h1>
+    <>
+      <Navbar />
+
+      <div className="text-center mt-10">
+        <h1 className="text-3xl font-bold">
+          Dashboard Page
+        </h1>
+      </div>
+    </>
   );
 }
 
