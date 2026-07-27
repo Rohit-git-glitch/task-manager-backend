@@ -1,10 +1,22 @@
 const express = require("express");
 
+const cors = require("cors");  //! adding cors for cross border resource sharing
+
 const app = express();
 
 const userRoutes = require("./routes/userRoutes");
 
 const taskRoutes = require("./routes/taskRoutes");
+
+//middleware
+//cors part
+app.use(cors({ 
+  origin: "http://localhost:5173"
+}));
+
+//app.use(express.json());
+
+
 
 app.use(express.json());
 //todo Very very imp express.json() is a middleware
