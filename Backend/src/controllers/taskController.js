@@ -38,6 +38,24 @@ const getTasks = async(req,res,next) =>{
             user : req.user._id
         };
 
+        //todo 1.Search Part.
+        if(req.query.search){
+            filter.$or = [
+                {
+                    title:{
+                        $regex : req.query.search,
+                        $options:"i"                //! i = ignore case
+                    }
+                },
+                {
+                    description : {
+                        $regex : req.query.search,
+                        $options: "i"
+                    }
+                }
+            ];
+        
+        }
 
         let sort = {};
             if (req.query.sort === "latest") {
