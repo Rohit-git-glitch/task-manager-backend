@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 
 function Login() {
+
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -14,7 +18,7 @@ function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     // console.log(formData);
@@ -22,9 +26,14 @@ function Login() {
     try {
     const response = await API.post("/users/login", formData);
 
+    localStorage.setItem("token",response.data.data.token); //now we will store Jwt
+
+    navigate("/dashboard");
+
     console.log(response.data);
 
-    alert("Login successful");
+    // alert("Login successful");
+    console.log("Token saved successfully");
 
   } catch (error) {
     console.log(error.response?.data || error.message);
