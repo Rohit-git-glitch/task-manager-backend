@@ -11,6 +11,8 @@ function Dashboard() {
 
   const[tasks , setTasks] = useState([]);
 
+  const[editingTask , setEditingTask] = useState(null);
+
   const fetchTasks = async () => {
     try {
       const response = await API.get("/tasks");
@@ -57,6 +59,23 @@ const handleAddTask = async (task) => {
   }
 };
 
+  const handleUpdateTask = async (id, updatedTask) => {
+    try {
+      await API.put(`/tasks/${id}`, updatedTask);
+
+      fetchTasks();
+
+      setEditingTask(null);
+
+      alert("Task updated successfully");
+
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+
+      alert("Failed to update task");
+    }
+  };
+
 
   //! Function Used to delete Task
   const handleDeleteTask = async (id) => {
@@ -74,6 +93,12 @@ const handleAddTask = async (task) => {
   }
   };
 
+  //! Editing the Task i.e Updating
+  const handleEditTask = (task) => {
+  console.log(task);
+  setEditingTask(task);
+  };
+
  return (
   <>
     <Navbar />
@@ -88,7 +113,13 @@ const handleAddTask = async (task) => {
         {user ? user.email : ""}
       </p>
 
-    <TaskForm onAddTask={handleAddTask} />
+    <TaskForm 
+      onAddTask={handleAddTask} 
+      onUpdateTask={handleUpdateTask}
+      editingTask={editingTask}
+      
+      
+    />
     <div className="mt-8">
 
       <h2 className="text-2xl font-bold mb-4">
@@ -114,12 +145,23 @@ const handleAddTask = async (task) => {
       </p>
     </div>
 
-    <button
-        onClick={() => handleDeleteTask(task._id)}
-        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-    >
+  <div className="flex gap-2">
+
+  <button
+    onClick={() => handleEditTask(task)}
+    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+  >
+    Edit
+  </button>
+
+  <button
+    onClick={() => handleDeleteTask(task._id)}
+    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+  >
     Delete
-   </button>
+  </button>
+
+</div>
 
     </div>
 

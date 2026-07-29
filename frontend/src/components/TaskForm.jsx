@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 
-function TaskForm({ onAddTask }) {
+function TaskForm({ onAddTask , onUpdateTask , editingTask }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
   });
+
+  useEffect(() => {
+  if (editingTask) {
+    setFormData({
+      title: editingTask.title,
+      description: editingTask.description,
+    });
+  }
+  }, [editingTask]);
 
   const handleChange = (e) => {
     setFormData({
@@ -16,7 +25,11 @@ function TaskForm({ onAddTask }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    onAddTask(formData);
+    if (editingTask) {
+      onUpdateTask(editingTask._id, formData);
+    } else {
+      onAddTask(formData);
+    }
 
     setFormData({
       title: "",
@@ -52,12 +65,13 @@ function TaskForm({ onAddTask }) {
         rows="4"
       />
 
-      <button
-        type="submit"
-        className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-      >
-        Add Task
-      </button>
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+        >
+        {editingTask ? "Update Task" : "Add Task"}
+        </button> 
+
     </form>
   );
 }
