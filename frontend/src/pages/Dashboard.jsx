@@ -58,6 +58,22 @@ const handleAddTask = async (task) => {
 };
 
 
+  //! Function Used to delete Task
+  const handleDeleteTask = async (id) => {
+  try {
+    await API.delete(`/tasks/${id}`);
+
+    fetchTasks();
+
+    alert("Task deleted successfully");
+
+  } catch (error) {
+    console.log(error.response?.data || error.message);
+
+    alert("Failed to delete task");
+  }
+  };
+
  return (
   <>
     <Navbar />
@@ -86,13 +102,26 @@ const handleAddTask = async (task) => {
             className="bg-white shadow-md rounded-lg p-4 mb-4"
           >
 
+            <div className="flex justify-between items-start">
+
+      <div>
         <h3 className="text-xl font-bold">
           {task.title}
-        </h3>
+      </h3>
 
-        <p className="text-gray-600">
-          {task.description}
-        </p>
+      <p className="text-gray-600 mt-2">
+        {task.description}
+      </p>
+    </div>
+
+    <button
+        onClick={() => handleDeleteTask(task._id)}
+        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+    >
+    Delete
+   </button>
+
+    </div>
 
       </div>
     ))
