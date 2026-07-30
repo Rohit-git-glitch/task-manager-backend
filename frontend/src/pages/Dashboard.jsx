@@ -13,9 +13,11 @@ function Dashboard() {
 
   const[editingTask , setEditingTask] = useState(null);
 
+  const [search, setSearch] = useState("");
+
   const fetchTasks = async () => {
     try {
-      const response = await API.get("/tasks");
+      const response = await API.get(`/tasks?search=${search}`);
 
       setTasks(response.data.data.tasks);
 
@@ -39,7 +41,7 @@ function Dashboard() {
       fetchProfile();
       fetchTasks();
     }
-  }, [token]);
+  }, [token , search]);
 
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -125,6 +127,14 @@ const handleAddTask = async (task) => {
         {user ? user.email : ""}
       </p>
 
+       <input
+         type="text"
+         placeholder="Search tasks..."
+         value={search}
+         onChange={(e) => setSearch(e.target.value)}
+         className="w-full border rounded px-4 py-2 mb-6"
+       />
+       
     <TaskForm 
       onAddTask={handleAddTask} 
       onUpdateTask={handleUpdateTask}
