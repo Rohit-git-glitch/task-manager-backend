@@ -76,6 +76,18 @@ const handleAddTask = async (task) => {
     }
   };
 
+  const handleToggleComplete = async (task) => {
+    try {
+      await API.put(`/tasks/${task._id}`, {
+        completed: !task.completed,
+      });
+
+      fetchTasks();
+
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+    }
+  };
 
   //! Function Used to delete Task
   const handleDeleteTask = async (id) => {
@@ -143,6 +155,23 @@ const handleAddTask = async (task) => {
       <p className="text-gray-600 mt-2">
         {task.description}
       </p>
+
+
+                <div className="mt-3">
+                  <span className="text-sm">
+                    Status:
+                  </span>
+
+                  <span
+                    className={
+                      task.completed
+                        ? "text-green-600 font-bold ml-2"
+                        : "text-yellow-600 font-bold ml-2"
+                    }
+                  >
+                    {task.completed ? "Completed" : "Pending"}
+                  </span>
+                </div>
     </div>
 
   <div className="flex gap-2">
@@ -159,6 +188,13 @@ const handleAddTask = async (task) => {
     className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
   >
     Delete
+  </button>
+
+  <button
+    onClick={() => handleToggleComplete(task)}
+    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+  >
+  {task.completed ? "Mark Pending" : "Complete"}
   </button>
 
 </div>
