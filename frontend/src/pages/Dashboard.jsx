@@ -14,10 +14,20 @@ function Dashboard() {
   const[editingTask , setEditingTask] = useState(null);
 
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [sort, setSort] = useState("latest");
 
   const fetchTasks = async () => {
     try {
-      const response = await API.get(`/tasks?search=${search}`);
+      let url = `/tasks?search=${search}`;
+
+      if (filter !== "all") {
+        url += `&completed=${filter === "completed"}`;
+      }
+
+      url += `&sort=${sort}`;
+
+      const response = await API.get(url);
 
       setTasks(response.data.data.tasks);
 
@@ -41,7 +51,7 @@ function Dashboard() {
       fetchProfile();
       fetchTasks();
     }
-  }, [token , search]);
+  }, [token , search , filter , sort]);
 
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -134,7 +144,48 @@ const handleAddTask = async (task) => {
          onChange={(e) => setSearch(e.target.value)}
          className="w-full border rounded px-4 py-2 mb-6"
        />
-       
+
+       <div className="flex gap-3 mb-6">
+
+         <button
+           onClick={() => setFilter("all")}
+           className="bg-blue-600 text-white px-4 py-2 rounded"
+         >
+           All
+         </button>
+
+         <button
+           onClick={() => setFilter("completed")}
+           className="bg-green-600 text-white px-4 py-2 rounded"
+         >
+           Completed
+         </button>
+
+         <button
+           onClick={() => setFilter("pending")}
+           className="bg-yellow-500 text-white px-4 py-2 rounded"
+         >
+           Pending
+         </button>
+
+       </div>
+       <div className="flex gap-3 mb-6">
+
+         <button
+           onClick={() => setSort("latest")}
+           className="bg-purple-600 text-white px-4 py-2 rounded"
+         >
+           Latest
+         </button>
+
+         <button
+           onClick={() => setSort("oldest")}
+           className="bg-gray-600 text-white px-4 py-2 rounded"
+         >
+           Oldest
+         </button>
+
+       </div>
     <TaskForm 
       onAddTask={handleAddTask} 
       onUpdateTask={handleUpdateTask}
