@@ -16,10 +16,14 @@ function Dashboard() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState("latest");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const fetchTasks = async () => {
     try {
-      let url = `/tasks?search=${search}`;
+      let url = `/tasks?page=${page}&limit=5`;
+
+      url += `&search=${search}`;
 
       if (filter !== "all") {
         url += `&completed=${filter === "completed"}`;
@@ -30,6 +34,8 @@ function Dashboard() {
       const response = await API.get(url);
 
       setTasks(response.data.data.tasks);
+
+      setTotalPages(response.data.data.pagination.totalPages);
 
     } catch (error) {
       console.log(error.response?.data || error.message);
@@ -46,12 +52,15 @@ function Dashboard() {
         console.log(error.response?.data || error.message);
       }
     };
-
     if (token) {
       fetchProfile();
       fetchTasks();
     }
-  }, [token , search , filter , sort]);
+  }, [token , search , filter , sort , page]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, filter, sort]);
 
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -260,11 +269,35 @@ const handleAddTask = async (task) => {
 
 </div>
 
+
     </div>
 
       </div>
     ))
   }
+         <div className="flex justify-center items-center gap-4 mt-8">
+
+           <button
+             onClick={() => setPage(page - 1)}
+             disabled={page === 1}
+             className="bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+           >
+             Previous
+           </button>
+
+           <span className="font-semibold">
+             Page {page} of {totalPages}
+           </span>
+
+           <button
+             onClick={() => setPage(page + 1)}
+             disabled={page === totalPages}
+             className="bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+           >
+             Next
+           </button>
+
+         </div>
 
   </div>
 
